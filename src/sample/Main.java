@@ -1,5 +1,6 @@
 package sample;
 
+import Game.GameOfLife;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,12 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+       // launch(args);
+        GameOfLife game = new GameOfLife(20,20);
+        game.markCellAsAlife(0,0);
+        game.markCellAsAlife(0,19);
+        game.markCellAsAlife(19,0);
+        System.out.println(game.numberOfNeighbours(0,0));
+        System.exit(0);
     }
 }
