@@ -1,0 +1,8 @@
+target/
+.idea/
+.settings/
+*.toc
+*.log
+*.synctex.gz
+*.aux
+*.iml
