@@ -1,13 +1,18 @@
 package GUI;
 
 import Game.GameOfLife;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class Controller {
 
@@ -23,16 +28,32 @@ public class Controller {
     @FXML
     private Canvas canvas;
 
-    private GraphicsContext gc;
+    @FXML
+    private Button genForward;
+
+    @FXML
+    private TextField nGenInput;
+
+    @FXML
+    private Slider slider;
+
+    private Timeline timer;
 
     private GameOfLife gameOfLife;
 
 
+    /**
+     * Initialises the Canvas with the given game of life dimensions
+     * Always creates a new GameOfLife
+     */
     public void onStartClick() {
+
+        //TODO NumberFormatExcepiton
         int x = Integer.parseInt(widthInput.getText());
         int y = Integer.parseInt(heightInput.getText());
         gameOfLife = new GameOfLife(x, y);
         drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+
     }
 
     /**
@@ -44,14 +65,12 @@ public class Controller {
      */
     public void clickCanvas(MouseEvent event) {
 
+        //Stop if the canvas shouldn't be clicked
         if (canvas.isDisable()) {
             return;
         }
 
         boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
-        System.out.println(event.getX());
-        System.out.println(event.getY());
-
 
         double clickX = event.getX();
         double clickY = event.getY();
@@ -88,9 +107,42 @@ public class Controller {
         drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
     }
 
+    public void onSlide() {
+        if (!(timer == null)) {
+            timer.stop();
+        }
+        System.out.println("hey");
+        int genPerMin = (int) slider.getValue();
+        System.out.println(genPerMin);
+        timer = new Timeline(new KeyFrame(Duration.millis(1000*60/genPerMin),
+                event -> calcAndDrawNextGeneration()));
+        timer.setCycleCount(Animation.INDEFINITE);
+        timer.play();
+    }
+
+    private void calcAndDrawNextGeneration() {
+        gameOfLife.calcNGenerations(1, false);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+    }
+
+    /**
+     * When the user clicks on the nextGen Button this method
+     * will calc the next n Generations and draws them on the canvas.
+     * Sets the generation per minute option to 0 so it won't calculate
+     */
+    public void calcNextGenerations() {
+        slider.setValue(0);
+
+        //TODO NumberFormatExcepiton
+        int n = Integer.parseInt(nGenInput.getText());
+        gameOfLife.calcNGenerations(n, false);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+
+    }
+
     private void drawConfigOnCanvas(boolean[][] gameConfig) {
         canvas.setDisable(false);
-        gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
         int rectWidth = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
         int rectHeight = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
