@@ -103,7 +103,7 @@ public class GameOfLife {
     }
 
     /**
-     * Checks for surrounding neighbours
+     * Checks for surrounding neighbours of a given cell
      *
      * @param x - coordinate of the cell
      * @param y - coordinate of the cell
@@ -141,6 +141,7 @@ public class GameOfLife {
 
     /**
      * Calculates n many next Generations and displays all of them
+     * if the display flag is set
      *
      * @param n       - number of generations to calculate
      * @param display - wether to print the generation on the terminal
@@ -152,5 +153,15 @@ public class GameOfLife {
         for (int i = 0; i < n; i++) {
             calculateNextGeneration(display);
         }
+    }
+
+
+    /**
+     * Returns the current configuration of the Game
+     *
+     * @return two-dimensional boolean array as configuration
+     */
+    public boolean[][] getCurrentConfiguration() {
+        return this.gameField;
     }
 }

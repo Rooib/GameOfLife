@@ -1,14 +1,14 @@
 package Util;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import Game.GameOfLife;
+
+import java.io.*;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileParser {
 
@@ -21,8 +21,8 @@ public class FileParser {
      * @return new GameOfLife configuration if the file was valid, else null
      */
     public boolean[][] createConfigurationFromFile(final String fileName) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+
             int colCounter = 0;
             int rowCounter = 0;
             int oldColCount = 0;
@@ -55,8 +55,8 @@ public class FileParser {
 
             boolean[][] gameConfig = new boolean[rowCounter][colCounter];
 
-            for(int i = 0; i< tempStorage.size(); i++) {
-                for(int j =0; j< tempStorage.get(i).length; j++) {
+            for (int i = 0; i < tempStorage.size(); i++) {
+                for (int j = 0; j < tempStorage.get(i).length; j++) {
                     gameConfig[i][j] = tempStorage.get(i)[j];
                 }
             }
@@ -70,5 +70,36 @@ public class FileParser {
         }
 
         return null;
+    }
+
+
+    /**
+     * Saves the configuration of the game to a .csv file with the given
+     * fileName
+     *
+     * @param gameOfLife - game to be saved
+     * @param fileName   - name of file
+     */
+    public void saveGameToFile(final GameOfLife gameOfLife, String fileName) {
+        fileName = fileName + ".csv";
+        boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
+        try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
+
+            for (boolean[] row : gameConfig) {
+                for (int i = 0; i < row.length; i++) {
+                    if (i != row.length - 1) {
+                        fileWriter.write(Boolean.toString(row[i]) + ",");
+                    } else {
+                        fileWriter.write(Boolean.toString(row[i]));
+                    }
+                }
+                fileWriter.write(System.lineSeparator());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
