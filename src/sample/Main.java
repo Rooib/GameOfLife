@@ -1,6 +1,7 @@
 package sample;
 
 import Game.GameOfLife;
+import Util.FileParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +11,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
@@ -19,12 +20,15 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-       // launch(args);
-        GameOfLife game = new GameOfLife(20,20);
-        game.markCellAsAlife(0,0);
-        game.markCellAsAlife(0,19);
-        game.markCellAsAlife(19,0);
-        System.out.println(game.numberOfNeighbours(0,0));
+        //launch(args);
+        GameOfLife game = new GameOfLife(5, 5);
+        game.markCellAsAlife(1, 2);
+        game.markCellAsAlife(2, 2);
+        game.markCellAsAlife(3, 2);
+        game.printGeneration();
+        game.calcNGenerations(5, true);
+        FileParser fileParser = new FileParser();
+        fileParser.createConfigurationFromFile("test.csv");
         System.exit(0);
     }
 }
