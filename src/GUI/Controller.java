@@ -14,8 +14,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import java.util.List;
 
+/**
+ * Contains the logic for the Game and the different methods
+ * that get triggered by the inputs of the GUI
+ * @author Jan Leuschner
+ * @version 2018-05-14
+ */
 public class Controller {
 
     @FXML
@@ -46,6 +51,7 @@ public class Controller {
 
     private GameOfLife gameOfLife;
 
+    private final String INPUT_VALID_NUMBER = "Bitte eine gültige Zahl > 1 eingeben!";
 
 
     /**
@@ -53,12 +59,16 @@ public class Controller {
      * Always creates a new GameOfLife
      */
     public void onStartClick() {
+        stopTimer();
 
-        //TODO NumberFormatExcepiton
-        int x = Integer.parseInt(widthInput.getText());
-        int y = Integer.parseInt(heightInput.getText());
-        gameOfLife = new GameOfLife(x, y);
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        try {
+            int x = Integer.parseInt(widthInput.getText());
+            int y = Integer.parseInt(heightInput.getText());
+            gameOfLife = new GameOfLife(x, y);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        } catch (IllegalArgumentException e) {
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+        }
 
     }
 
@@ -121,13 +131,14 @@ public class Controller {
      * Stops every other timer from before
      */
     public void onSlide() {
-        if (!(timer == null)) {
-            timer.stop();
+        if (gameOfLife == null) {
+            return;
         }
-        System.out.println("hey");
+
+        stopTimer();
         int genPerMin = (int) slider.getValue();
         System.out.println(genPerMin);
-        timer = new Timeline(new KeyFrame(Duration.millis(1000*60/genPerMin),
+        timer = new Timeline(new KeyFrame(Duration.millis(1000 * 60 / genPerMin),
                 event -> calcAndDrawNextGeneration()));
         timer.setCycleCount(Animation.INDEFINITE);
         timer.play();
@@ -148,20 +159,36 @@ public class Controller {
      * Sets the generation per minute option to 0 so it won't calculate
      */
     public void calcNextGenerations() {
-        slider.setValue(0);
+        if (gameOfLife == null) {
+            return;
+        }
 
-        //TODO NumberFormatExcepiton
-        int n = Integer.parseInt(nGenInput.getText());
-        gameOfLife.calcNGenerations(n, false);
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        stopTimer();
+
+        try {
+            int n = Integer.parseInt(nGenInput.getText());
+            gameOfLife.calcNGenerations(n, false);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        } catch (IllegalArgumentException e) {
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+        }
 
     }
 
     public void goNGenerationsBack() {
-        //TODO NumberFormatExcepiton
-        int n = Integer.parseInt(nGenInput.getText());
-        gameOfLife.getNPreviousGenerations(n);
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+
+        if (gameOfLife == null) {
+            return;
+        }
+        stopTimer();
+
+        try {
+            int n = Integer.parseInt(nGenInput.getText());
+            gameOfLife.getNPreviousGenerations(n);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        } catch (IllegalArgumentException e) {
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+        }
     }
 
     private void drawConfigOnCanvas(boolean[][] gameConfig) {
@@ -190,6 +217,16 @@ public class Controller {
             currentY += rectHeight;
         }
 
+    }
+
+    /**
+     * Stops the timer if it still calculates
+     */
+    public void stopTimer() {
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
     }
 
 }

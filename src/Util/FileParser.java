@@ -20,7 +20,7 @@ public class FileParser {
      * @param fileName - name of file containing the configuration
      * @return new GameOfLife configuration if the file was valid, else null
      */
-    public boolean[][] createConfigurationFromFile(final String fileName) {
+    public static boolean[][] createConfigurationFromFile(final String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
 
             int colCounter = 0;
@@ -80,7 +80,7 @@ public class FileParser {
      * @param gameOfLife - game to be saved
      * @param fileName   - name of file
      */
-    public void saveGameToFile(final GameOfLife gameOfLife, String fileName) {
+    public static void saveGameToFile(final GameOfLife gameOfLife, String fileName) {
         fileName = fileName + ".csv";
         boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
