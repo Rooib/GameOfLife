@@ -53,7 +53,7 @@ public class GameOfLife {
 
 
     /**
-     * Marks the cell at the given coordinates as alife
+     * Marks the cell at the given coordinates as alive
      *
      * @param x - coordinate of cell
      * @param y - coordinate of cell

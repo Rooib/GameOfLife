@@ -102,8 +102,8 @@ public class Controller {
         double clickX = event.getX();
         double clickY = event.getY();
         //Calculate the width of a rectangle on the canvas
-        int rectWidth = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
-        int rectHeight = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
+        int rectWidth = (int) Math.ceil(canvas.getWidth() / gameConfig.length);
+        int rectHeight = (int) Math.ceil(canvas.getHeight() / gameConfig[0].length);
         //Calculate how many rows and cols are even possible
         int colCount = (int) Math.ceil(canvas.getWidth() / rectWidth);
         int rowCount = (int) Math.ceil(canvas.getHeight() / rectHeight);
@@ -148,7 +148,7 @@ public class Controller {
 
         stopTimer();
         int genPerMin = (int) slider.getValue();
-        System.out.println(genPerMin);
+        //System.out.println(genPerMin);
         timer = new Timeline(new KeyFrame(Duration.millis(1000 * 60 / genPerMin),
                 event -> calcAndDrawNextGeneration()));
         timer.setCycleCount(Animation.INDEFINITE);
@@ -205,7 +205,7 @@ public class Controller {
     private void drawConfigOnCanvas(boolean[][] gameConfig) {
         canvas.setDisable(false);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        System.out.println(canvas.heightProperty().get());
+        //System.out.println(canvas.heightProperty().get());
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
         int rectHeight = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
         int rectWidth = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
