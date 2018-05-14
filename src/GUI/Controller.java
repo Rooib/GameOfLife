@@ -14,6 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.util.List;
+
 public class Controller {
 
     @FXML
@@ -32,6 +34,9 @@ public class Controller {
     private Button genForward;
 
     @FXML
+    private Button genBackward;
+
+    @FXML
     private TextField nGenInput;
 
     @FXML
@@ -40,6 +45,7 @@ public class Controller {
     private Timeline timer;
 
     private GameOfLife gameOfLife;
+
 
 
     /**
@@ -66,7 +72,7 @@ public class Controller {
     public void clickCanvas(MouseEvent event) {
 
         //Stop if the canvas shouldn't be clicked
-        if (canvas.isDisable()) {
+        if (canvas.isDisable() || gameOfLife == null) {
             return;
         }
 
@@ -84,6 +90,7 @@ public class Controller {
         int xIndex = 0;
         int yIndex = 0;
 
+        //Calc x coord of cell
         for (int i = 1; i <= colCount; i++) {
             if (i * rectWidth >= clickX) {
                 xIndex = i - 1;
@@ -91,6 +98,7 @@ public class Controller {
             }
         }
 
+        //Calc y coord of cell
         for (int i = 1; i <= rowCount; i++) {
             if (i * rectHeight >= clickY) {
                 yIndex = i - 1;
@@ -107,6 +115,11 @@ public class Controller {
         drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
     }
 
+    /**
+     * Determine the calculation per minute when the slider
+     * is moved and set a timer to do so.
+     * Stops every other timer from before
+     */
     public void onSlide() {
         if (!(timer == null)) {
             timer.stop();
@@ -120,6 +133,10 @@ public class Controller {
         timer.play();
     }
 
+    /**
+     * Method to be called by the timer each time it executes.
+     * Calc and draw next generation
+     */
     private void calcAndDrawNextGeneration() {
         gameOfLife.calcNGenerations(1, false);
         drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
@@ -138,6 +155,13 @@ public class Controller {
         gameOfLife.calcNGenerations(n, false);
         drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
 
+    }
+
+    public void goNGenerationsBack() {
+        //TODO NumberFormatExcepiton
+        int n = Integer.parseInt(nGenInput.getText());
+        gameOfLife.getNPreviousGenerations(n);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
     }
 
     private void drawConfigOnCanvas(boolean[][] gameConfig) {

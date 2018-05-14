@@ -1,7 +1,6 @@
 package Main;
 
 import GUI.MainWindow;
-import Game.GameOfLife;
 import javafx.application.Application;
 
 /**
@@ -13,13 +12,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //launch(args);
-        GameOfLife game = new GameOfLife(5, 5);
-        game.markCellAsAlife(1, 2);
-        game.markCellAsAlife(2, 2);
-        game.markCellAsAlife(3, 2);
-        game.printGeneration();
-        game.calcNGenerations(5, true);
         Application.launch(MainWindow.class, args);
 
         System.exit(0);

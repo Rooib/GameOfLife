@@ -1,6 +1,10 @@
 package Game;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Contains the Game of Life logic and includes
  * the API for communicating with it
@@ -18,6 +22,8 @@ public class GameOfLife {
 
     private boolean[][] referenceField;
 
+    private List<boolean[][]> oldConfigurations;
+
     /**
      * Constructor for a new Game of life
      *
@@ -30,6 +36,7 @@ public class GameOfLife {
         }
         gameField = new boolean[height][width];
         referenceField = new boolean[height][width];
+        oldConfigurations = new ArrayList<>();
 
     }
 
@@ -41,6 +48,7 @@ public class GameOfLife {
     public GameOfLife(final boolean[][] gameConfiguration) {
         this.gameField = gameConfiguration;
         this.referenceField = gameConfiguration;
+        oldConfigurations = new ArrayList<>();
     }
 
 
@@ -67,17 +75,23 @@ public class GameOfLife {
     /**
      * Calculates the next Generation and prints the field if
      * the user wants it to
+     * Saves the old Configurations
      *
      * @param display - if the generation calculated should be printed on the terminal
      */
     private void calculateNextGeneration(final boolean display) {
 
-        //Deep copy the gameField
+        //create a new old config so we don't save the reference to the array
+        boolean[][] oldConfig = new boolean[gameField.length][gameField[0].length];
+
+        //Deep copy the gameField to reference and oldConfig
         for (int i = 0; i < gameField.length; i++) {
             boolean[] copyRow = gameField[i];
             int rowLength = gameField[i].length;
             System.arraycopy(copyRow, 0, referenceField[i], 0, rowLength);
+            System.arraycopy(copyRow, 0, oldConfig[i], 0, rowLength);
         }
+        addToOldConfig(oldConfig);
 
         for (int y = 0; y < gameField.length; y++) {
             for (int x = 0; x < gameField[y].length; x++) {
@@ -128,7 +142,7 @@ public class GameOfLife {
         return neighbourCount;
     }
 
-    public void printGeneration() {
+    private void printGeneration() {
         for (boolean[] row : gameField) {
             for (boolean col : row) {
                 System.out.print(col + ",");
@@ -155,6 +169,22 @@ public class GameOfLife {
         }
     }
 
+    /**
+     * Tells if there are no more further generations to calculate
+     *
+     * @return - true if the game is over, else false
+     */
+    public boolean isDone() {
+        boolean[][] oldConfig = getCurrentConfiguration();
+        calculateNextGeneration(false);
+        if (Arrays.equals(oldConfig, gameField)) {
+            return true;
+        } else {
+            this.gameField = oldConfig;
+            return false;
+        }
+    }
+
 
     /**
      * Returns the current configuration of the Game
@@ -164,4 +194,50 @@ public class GameOfLife {
     public boolean[][] getCurrentConfiguration() {
         return this.gameField;
     }
+
+    /**
+     * Saves an old Configuration of the game to a list
+     * containing maximum 50 old configurations
+     * <p>
+     * Parameter won't be checked since this is a private method
+     *
+     * @param gameConfig - the configuration to be saved
+     */
+    private void addToOldConfig(boolean[][] gameConfig) {
+        if (oldConfigurations.size() == 50) {
+            oldConfigurations.remove(0);
+        }
+        oldConfigurations.add(gameConfig);
+    }
+
+    /**
+     * Returns the previous generation of this game and
+     * also sets the current managed generation to the previous one
+     *
+     * @return - if existing, the previous generation else the current generation
+     */
+    private boolean[][] getAndSetPreviousGeneration() {
+        if (oldConfigurations.size() == 0) {
+            return gameField;
+        } else {
+            gameField = oldConfigurations.get(oldConfigurations.size() - 1);
+            oldConfigurations.remove(oldConfigurations.size() - 1);
+            return gameField;
+        }
+
+    }
+
+    /**
+     * Sets the game back to the n generations before
+     *
+     * @param n - how many generations to go back
+     * @return the calculated n oldest generation
+     */
+    public boolean[][] getNPreviousGenerations(final int n) {
+        for (int i = 0; i < n; i++) {
+            gameField = getAndSetPreviousGeneration();
+        }
+        return gameField;
+    }
+
 }
