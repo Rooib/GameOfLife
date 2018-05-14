@@ -20,9 +20,9 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Datei">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Öffnen" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveConfig" text="Speichern als" />
-                        <MenuItem mnemonicParsing="false" text="Speichern" />
+                    <MenuItem mnemonicParsing="false" onAction="#openConfiguration" text="Öffnen" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsConfig" text="Speichern als" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveConfig" text="Speichern" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Presets">
@@ -149,7 +149,7 @@
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" disable="true" height="360.0" onMouseClicked="#clickCanvas" width="442.0" VBox.vgrow="ALWAYS" />
+            <Canvas fx:id="canvas" disable="true" height="410.0" onMouseClicked="#clickCanvas" width="442.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </center>

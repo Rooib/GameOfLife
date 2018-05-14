@@ -20,6 +20,7 @@ import javafx.util.Duration;
 /**
  * Contains the logic for the Game and the different methods
  * that get triggered by the inputs of the GUI
+ *
  * @author Jan Leuschner
  * @version 2018-05-14
  */
@@ -70,7 +71,7 @@ public class Controller {
      */
     public void onStartClick() {
         stopTimer();
-
+        GameSaver.resetFile();
         try {
             int x = Integer.parseInt(widthInput.getText());
             int y = Integer.parseInt(heightInput.getText());
@@ -204,9 +205,10 @@ public class Controller {
     private void drawConfigOnCanvas(boolean[][] gameConfig) {
         canvas.setDisable(false);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        System.out.println(canvas.heightProperty().get());
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
-        int rectWidth = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
-        int rectHeight = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
+        int rectHeight = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
+        int rectWidth = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
         int currentX = 0;
         int currentY = 0;
 
@@ -239,8 +241,26 @@ public class Controller {
         }
     }
 
+    /**
+     * Saves the current game config to the previously
+     * selected file. If that does not exist, save as dialog will
+     * pop up
+     */
     public void saveConfig() {
-        GameSaver.saveFile(stage,gameOfLife);
+        GameSaver.saveFile(stage, gameOfLife);
+    }
+
+    /**
+     * Creates a save dialog to save the file
+     */
+    public void saveAsConfig() {
+        GameSaver.saveAsFile(stage,gameOfLife);
+    }
+
+    public void openConfiguration() {
+        stopTimer();
+        gameOfLife = new GameOfLife(GameSaver.openFile(stage));
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
     }
 
     public void setStage(final Stage stage) {

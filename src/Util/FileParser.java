@@ -20,7 +20,7 @@ public class FileParser {
      * @param fileName - name of file containing the configuration
      * @return new GameOfLife configuration if the file was valid, else null
      */
-    public static boolean[][] createConfigurationFromFile(final String fileName) {
+    public static boolean[][] createConfigurationFromFile(final String fileName) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
 
             int colCounter = 0;
@@ -63,13 +63,8 @@ public class FileParser {
 
             return gameConfig;
 
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("The file does not exist!");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        return null;
     }
 
 
@@ -81,6 +76,8 @@ public class FileParser {
      * @param fileName   - name of file
      */
     public static void saveGameToFile(final GameOfLife gameOfLife, String fileName) throws IOException {
+        //replace any additional .csv endings
+        fileName = fileName.replaceAll(".csv","");
         fileName = fileName + ".csv";
         boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
