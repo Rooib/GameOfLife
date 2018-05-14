@@ -11,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -22,6 +24,9 @@ import javafx.util.Duration;
  * @version 2018-05-14
  */
 public class Controller {
+
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     private TextField widthInput;
@@ -46,6 +51,11 @@ public class Controller {
 
     @FXML
     private Slider slider;
+
+    /**
+     * The primary stage
+     */
+    private Stage stage;
 
     private Timeline timer;
 
@@ -227,6 +237,14 @@ public class Controller {
             timer.stop();
             timer = null;
         }
+    }
+
+    public void saveConfig() {
+        GameSaver.saveFile(stage,gameOfLife);
+    }
+
+    public void setStage(final Stage stage) {
+        this.stage = stage;
     }
 
 }

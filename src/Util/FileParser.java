@@ -80,7 +80,7 @@ public class FileParser {
      * @param gameOfLife - game to be saved
      * @param fileName   - name of file
      */
-    public static void saveGameToFile(final GameOfLife gameOfLife, String fileName) {
+    public static void saveGameToFile(final GameOfLife gameOfLife, String fileName) throws IOException {
         fileName = fileName + ".csv";
         boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
@@ -95,11 +95,7 @@ public class FileParser {
                 }
                 fileWriter.write(System.lineSeparator());
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
 
     }
 }
