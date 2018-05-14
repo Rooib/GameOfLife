@@ -76,9 +76,6 @@ public class FileParser {
      * @param fileName   - name of file
      */
     public static void saveGameToFile(final GameOfLife gameOfLife, String fileName) throws IOException {
-        //replace any additional .csv endings
-        fileName = fileName.replaceAll(".csv","");
-        fileName = fileName + ".csv";
         boolean[][] gameConfig = gameOfLife.getCurrentConfiguration();
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
 

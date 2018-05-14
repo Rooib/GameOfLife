@@ -9,7 +9,8 @@ import javafx.scene.control.Alert;
  * @version 2018-05-14
  */
 class PopUpInfo {
-    // TODO String als Konstante
+
+    private final static String TITLE_TEXT  = "Diese Eingabe stimmt so nicht!";
 
     /**
      * Creates a information pop up dialog with the given message
@@ -17,12 +18,7 @@ class PopUpInfo {
      * @param message - shown as content by this dialog
      */
     static void createInformationPopup(final String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Diese Eingabe stimmt so nicht!");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        alert.showAndWait();
+        createGeneralPoput(Alert.AlertType.INFORMATION,message);
     }
 
     /**
@@ -31,11 +27,14 @@ class PopUpInfo {
      * @param message - shown as content by this dialog
      */
     static void createWarningPopup(final String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Diese Eingabe stimmt so nicht!");
+        createGeneralPoput(Alert.AlertType.WARNING,message);
+    }
+
+    private static void createGeneralPoput(Alert.AlertType alertType,final String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(TITLE_TEXT);
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 }

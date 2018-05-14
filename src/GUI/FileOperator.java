@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author Jan Leuschner
  * @version 2018-05-14
  */
-public class GameSaver {
+public class FileOperator {
 
     private static String currentFile;
 

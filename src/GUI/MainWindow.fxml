@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
@@ -16,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
@@ -142,10 +149,6 @@
       <Cursor fx:constant="DEFAULT" />
    </cursor>
    <center>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
-            <Canvas fx:id="canvas" disable="true" height="440.0" onMouseClicked="#clickCanvas" width="440.0" VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
+      <Canvas fx:id="canvas" disable="true" height="580.0" onMouseClicked="#clickCanvas" width="580.0" VBox.vgrow="ALWAYS" />
    </center>
 </BorderPane>

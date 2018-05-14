@@ -13,7 +13,7 @@ public class MainWindow extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Game Of Life");
-        primaryStage.setScene(new Scene(root, 951, 552));
+        primaryStage.setScene(new Scene(root, 850, 619));
         Controller controller =  loader.getController();
         controller.setStage(primaryStage);
         primaryStage.show();
