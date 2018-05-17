@@ -73,7 +73,7 @@ public class FileOperator {
             boolean[][] configuration = FileParser.createConfigurationFromFile(file.getAbsolutePath());
             currentFile = file.getAbsolutePath();
 
-            if(configuration == null) {
+            if (configuration == null) {
                 PopUpInfo.createInformationPopup("Die Datei konnte nicht richtig gelesen werden!");
             }
 
@@ -85,6 +85,26 @@ public class FileOperator {
             PopUpInfo.createWarningPopup("Die Datei konnte nicht gefunden oder geladen werden!");
         }
 
+        return new boolean[0][0];
+    }
+
+    /**
+     * Opens a file from the given File path and returns, if successfull, the files
+     * game configuration
+     *
+     * @param filePath - path to the wanted file
+     * @return game configuration described in the file
+     */
+    public static boolean[][] openFileFromPath(final String filePath) {
+        try {
+            boolean[][] configuration = FileParser.createConfigurationFromFile(filePath);
+            currentFile = filePath;
+            return configuration;
+        } catch (IOException e) {
+            PopUpInfo.createWarningPopup("Die Datei konnte nicht gefunden oder geladen werden!");
+        } catch (IllegalStateException e) {
+            PopUpInfo.createWarningPopup("Die Datei enthält kein rechteckiges Spielfeld!");
+        }
         return new boolean[0][0];
     }
 

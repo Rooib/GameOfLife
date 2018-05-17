@@ -10,11 +10,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.File;
+import java.util.List;
+
 
 
 /**
@@ -92,8 +98,8 @@ public class Controller {
      */
     public void clickCanvas(MouseEvent event) {
 
-        //Stop if the canvas shouldn't be clicked
-        if (canvas.isDisable() || gameOfLife == null) {
+        //Stop if there is no game of life instance
+        if ( gameOfLife == null) {
             return;
         }
 
@@ -254,7 +260,7 @@ public class Controller {
      * Creates a save dialog to save the file
      */
     public void saveAsConfig() {
-        FileOperator.saveAsFile(stage,gameOfLife);
+        FileOperator.saveAsFile(stage, gameOfLife);
     }
 
     public void openConfiguration() {
@@ -266,5 +272,27 @@ public class Controller {
     public void setStage(final Stage stage) {
         this.stage = stage;
     }
+
+    /**
+     * Constructs a game of life from a file dragged onto the canvas
+     *
+     * @param dragEvent - the Event provided by the Window
+     */
+    public void loadFileOnDragDropped(DragEvent dragEvent) {
+        System.out.println("dragEvent");
+        Dragboard dragboard = dragEvent.getDragboard();
+        if(dragboard.hasFiles() ) {
+            List<File> files = dragboard.getFiles();
+            if(files.size()>1 || !files.get(0).getName().endsWith(".csv")) {
+                return;
+            }
+            String filePath = files.get(0).getAbsolutePath();
+            boolean[][] configuration = FileOperator.openFileFromPath(filePath);
+            gameOfLife = new GameOfLife(configuration);
+            drawConfigOnCanvas(configuration);
+        }
+
+    }
+
 
 }
