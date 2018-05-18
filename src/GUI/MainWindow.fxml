@@ -151,7 +151,10 @@
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" height="570.0" onDragExited="#loadFileOnDragDropped" onMouseClicked="#clickCanvas" width="570.0" VBox.vgrow="ALWAYS" />
+            <Canvas fx:id="canvas" height="570.0" onDragExited="#loadFileOnDragDropped" onMouseClicked="#clickCanvas" width="570.0">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin></Canvas>
          </children>
       </VBox>
    </center>

@@ -82,7 +82,7 @@ public class Controller {
             int x = Integer.parseInt(widthInput.getText());
             int y = Integer.parseInt(heightInput.getText());
             gameOfLife = new GameOfLife(x, y);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
         } catch (IllegalArgumentException e) {
             PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
         }
@@ -136,10 +136,10 @@ public class Controller {
         if (gameConfig[yIndex][xIndex]) {
             gameOfLife.markCellAsDead(xIndex, yIndex);
         } else {
-            gameOfLife.markCellAsAlife(xIndex, yIndex);
+            gameOfLife.markCellAsAlive(xIndex, yIndex);
         }
 
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
     }
 
     /**
@@ -167,7 +167,7 @@ public class Controller {
      */
     private void calcAndDrawNextGeneration() {
         gameOfLife.calcNGenerations(1, false);
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
     }
 
     /**
@@ -185,7 +185,7 @@ public class Controller {
         try {
             int n = Integer.parseInt(nGenInput.getText());
             gameOfLife.calcNGenerations(n, false);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
         } catch (IllegalArgumentException e) {
             PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
         }
@@ -202,13 +202,13 @@ public class Controller {
         try {
             int n = Integer.parseInt(nGenInput.getText());
             gameOfLife.getNPreviousGenerations(n);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
         } catch (IllegalArgumentException e) {
             PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
         }
     }
 
-    private void drawConfigOnCanvas(boolean[][] gameConfig) {
+    private void drawConfigOnCanvas(boolean[][] gameConfig, boolean[][] visitedCells, boolean showVisited) {
         canvas.setDisable(false);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         //System.out.println(canvas.heightProperty().get());
@@ -218,15 +218,20 @@ public class Controller {
         int currentX = 0;
         int currentY = 0;
 
-        for (boolean[] row : gameConfig) {
-            for (boolean value : row) {
+        for (int i = 0; i < gameConfig.length; i++) {
+            for (int j = 0; j< gameConfig[i].length; j++) {
 
-                if (value) {
+                if (gameConfig[i][j]) {
                     gc.setFill(Color.GREEN);
                     gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
                 } else {
-                    gc.setFill(Color.RED);
-                    gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
+                    if(showVisited && visitedCells[i][j]) {
+                        gc.setFill(Color.ALICEBLUE);
+                        gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
+                    } else {
+                        gc.setFill(Color.RED);
+                        gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
+                    }
                 }
                 currentX += rectWidth;
 
@@ -266,7 +271,7 @@ public class Controller {
     public void openConfiguration() {
         stopTimer();
         gameOfLife = new GameOfLife(FileOperator.openFile(stage));
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration());
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
     }
 
     public void setStage(final Stage stage) {
@@ -289,7 +294,7 @@ public class Controller {
             String filePath = files.get(0).getAbsolutePath();
             boolean[][] configuration = FileOperator.openFileFromPath(filePath);
             gameOfLife = new GameOfLife(configuration);
-            drawConfigOnCanvas(configuration);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
         }
 
     }

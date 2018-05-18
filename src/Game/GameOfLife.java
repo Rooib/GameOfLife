@@ -22,7 +22,11 @@ public class GameOfLife {
 
     private boolean[][] referenceField;
 
+    private boolean[][] visitedCells;
+
     private List<boolean[][]> oldConfigurations;
+
+    private List<boolean[][]> oldVisitedCells;
 
     /**
      * Constructor for a new Game of life
@@ -34,9 +38,12 @@ public class GameOfLife {
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException("Game field cannot have negative sizes!");
         }
-        gameField = new boolean[height][width];
-        referenceField = new boolean[height][width];
-        oldConfigurations = new ArrayList<>();
+        this.gameField = new boolean[height][width];
+        this.referenceField = new boolean[height][width];
+        this.visitedCells = new boolean[height][width];
+        this.oldConfigurations = new ArrayList<>();
+        this.oldVisitedCells = new ArrayList<>();
+
 
     }
 
@@ -48,7 +55,9 @@ public class GameOfLife {
     public GameOfLife(final boolean[][] gameConfiguration) {
         this.gameField = gameConfiguration;
         this.referenceField = gameConfiguration;
-        oldConfigurations = new ArrayList<>();
+        this.visitedCells = gameConfiguration;
+        this.oldConfigurations = new ArrayList<>();
+        this.oldVisitedCells = new ArrayList<>();
     }
 
 
@@ -58,7 +67,7 @@ public class GameOfLife {
      * @param x - coordinate of cell
      * @param y - coordinate of cell
      */
-    public void markCellAsAlife(int x, int y) {
+    public void markCellAsAlive(int x, int y) {
         gameField[y][x] = true;
     }
 
@@ -81,17 +90,13 @@ public class GameOfLife {
      */
     private void calculateNextGeneration(final boolean display) {
 
-        //create a new old config so we don't save the reference to the array
-        boolean[][] oldConfig = new boolean[gameField.length][gameField[0].length];
+        referenceField = getCopy(gameField);
 
-        //Deep copy the gameField to reference and oldConfig
-        for (int i = 0; i < gameField.length; i++) {
-            boolean[] copyRow = gameField[i];
-            int rowLength = gameField[i].length;
-            System.arraycopy(copyRow, 0, referenceField[i], 0, rowLength);
-            System.arraycopy(copyRow, 0, oldConfig[i], 0, rowLength);
-        }
-        addToOldConfig(oldConfig);
+        boolean[][] oldConfig = getCopy(gameField);
+        boolean[][] previousVisitedCells = getCopy(visitedCells);
+        saveToHistoryList(oldConfig, oldConfigurations);
+        saveToHistoryList(previousVisitedCells, oldVisitedCells);
+
 
         for (int y = 0; y < gameField.length; y++) {
             for (int x = 0; x < gameField[y].length; x++) {
@@ -104,7 +109,9 @@ public class GameOfLife {
                     }
                 } else {
                     if (neigbhourCount == 3) {
-                        this.markCellAsAlife(x, y);
+                        this.markCellAsAlive(x, y);
+                        this.visitedCells[y][x] = true;
+                        //TODO villeicht hier auch die markCell Methode generalisiern
                     }
                 }
             }
@@ -164,8 +171,10 @@ public class GameOfLife {
         if (n < 1) {
             throw new IllegalArgumentException("You must at least calculate one next generation!");
         }
-        for (int i = 0; i < n; i++) {
-            calculateNextGeneration(display);
+        if (!isDone()) {
+            for (int i = 0; i < n; i++) {
+                calculateNextGeneration(display);
+            }
         }
     }
 
@@ -174,7 +183,7 @@ public class GameOfLife {
      *
      * @return - true if the game is over, else false
      */
-    public boolean isDone() {
+    private boolean isDone() {
         boolean[][] oldConfig = getCurrentConfiguration();
         calculateNextGeneration(false);
         if (Arrays.equals(oldConfig, gameField)) {
@@ -203,11 +212,11 @@ public class GameOfLife {
      *
      * @param gameConfig - the configuration to be saved
      */
-    private void addToOldConfig(boolean[][] gameConfig) {
-        if (oldConfigurations.size() == 50) {
-            oldConfigurations.remove(0);
+    private void saveToHistoryList(boolean[][] gameConfig, List<boolean[][]> saveList) {
+        if (saveList.size() == 50) {
+            saveList.remove(0);
         }
-        oldConfigurations.add(gameConfig);
+        saveList.add(gameConfig);
     }
 
     /**
@@ -216,13 +225,18 @@ public class GameOfLife {
      *
      * @return - if existing, the previous generation else the current generation
      */
-    private boolean[][] getAndSetPreviousGeneration() {
+    private void getAndSetPreviousGeneration() {
+        //TODO villeicht exception werfen, wenn die länge der history listen nicht übereinstimmen
         if (oldConfigurations.size() == 0) {
-            return gameField;
+            return;
         } else {
+            // Reset visited cells to previous settings
+            visitedCells = oldVisitedCells.get(oldVisitedCells.size() - 1);
+            oldVisitedCells.remove(oldVisitedCells.size() - 1);
+            // Reset game to old config
             gameField = oldConfigurations.get(oldConfigurations.size() - 1);
             oldConfigurations.remove(oldConfigurations.size() - 1);
-            return gameField;
+
         }
 
     }
@@ -231,13 +245,31 @@ public class GameOfLife {
      * Sets the game back to the n generations before
      *
      * @param n - how many generations to go back
-     * @return the calculated n oldest generation
      */
-    public boolean[][] getNPreviousGenerations(final int n) {
+    public void getNPreviousGenerations(final int n) {
         for (int i = 0; i < n; i++) {
-            gameField = getAndSetPreviousGeneration();
+            getAndSetPreviousGeneration();
         }
-        return gameField;
     }
 
+    /**
+     * Returns a copy of the given two dimensional boolean array
+     * Parameters won't be checked because of private access
+     *
+     * @param array - two dimensional boolean array to be copied
+     * @return a copy from the given array
+     */
+    private boolean[][] getCopy(boolean[][] array) {
+        boolean[][] copiedArray = new boolean[array.length][array[0].length];
+        for (int i = 0; i < array.length; i++) {
+            boolean[] copyRow = array[i];
+            int rowLength = array[i].length;
+            System.arraycopy(copyRow, 0, copiedArray[i], 0, rowLength);
+        }
+        return copiedArray;
+    }
+
+    public boolean[][] getVisitedCells() {
+        return visitedCells;
+    }
 }
