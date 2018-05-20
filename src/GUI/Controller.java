@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
@@ -20,7 +21,6 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.util.List;
-
 
 
 /**
@@ -59,6 +59,9 @@ public class Controller {
     @FXML
     private Slider slider;
 
+    @FXML
+    CheckBox showVisitedBox;
+
     /**
      * The primary stage
      */
@@ -69,6 +72,8 @@ public class Controller {
     private GameOfLife gameOfLife;
 
     private final String INPUT_VALID_NUMBER = "Bitte eine gültige Zahl > 1 eingeben!";
+
+    private final static String INPUT_INVALID_TITLE = "Diese Eingabe stimmt so nicht!";
 
 
     /**
@@ -82,9 +87,9 @@ public class Controller {
             int x = Integer.parseInt(widthInput.getText());
             int y = Integer.parseInt(heightInput.getText());
             gameOfLife = new GameOfLife(x, y);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
         }
 
     }
@@ -99,7 +104,7 @@ public class Controller {
     public void clickCanvas(MouseEvent event) {
 
         //Stop if there is no game of life instance
-        if ( gameOfLife == null) {
+        if (gameOfLife == null) {
             return;
         }
 
@@ -135,11 +140,13 @@ public class Controller {
         //switch cell state
         if (gameConfig[yIndex][xIndex]) {
             gameOfLife.markCellAsDead(xIndex, yIndex);
+            gameOfLife.markCellAsNotVisited(xIndex, yIndex);
         } else {
             gameOfLife.markCellAsAlive(xIndex, yIndex);
+            gameOfLife.markCellAsVisited(xIndex, yIndex);
         }
 
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
     }
 
     /**
@@ -154,7 +161,7 @@ public class Controller {
 
         stopTimer();
         int genPerMin = (int) slider.getValue();
-        //System.out.println(genPerMin);
+
         timer = new Timeline(new KeyFrame(Duration.millis(1000 * 60 / genPerMin),
                 event -> calcAndDrawNextGeneration()));
         timer.setCycleCount(Animation.INDEFINITE);
@@ -167,7 +174,7 @@ public class Controller {
      */
     private void calcAndDrawNextGeneration() {
         gameOfLife.calcNGenerations(1, false);
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
     }
 
     /**
@@ -185,9 +192,9 @@ public class Controller {
         try {
             int n = Integer.parseInt(nGenInput.getText());
             gameOfLife.calcNGenerations(n, false);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
         }
 
     }
@@ -202,16 +209,21 @@ public class Controller {
         try {
             int n = Integer.parseInt(nGenInput.getText());
             gameOfLife.getNPreviousGenerations(n);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
         }
     }
 
-    private void drawConfigOnCanvas(boolean[][] gameConfig, boolean[][] visitedCells, boolean showVisited) {
+    /**
+     * Draws the current configuration on the canvas
+     *
+     * @param gameConfig   - current game configuration
+     * @param visitedCells - the visited cells as game configuration
+     */
+    private void drawConfigOnCanvas(boolean[][] gameConfig, boolean[][] visitedCells) {
         canvas.setDisable(false);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        //System.out.println(canvas.heightProperty().get());
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getWidth());
         int rectHeight = (int) Math.ceil(canvas.getHeight() / gameConfig.length);
         int rectWidth = (int) Math.ceil(canvas.getWidth() / gameConfig[0].length);
@@ -219,13 +231,13 @@ public class Controller {
         int currentY = 0;
 
         for (int i = 0; i < gameConfig.length; i++) {
-            for (int j = 0; j< gameConfig[i].length; j++) {
+            for (int j = 0; j < gameConfig[i].length; j++) {
 
                 if (gameConfig[i][j]) {
                     gc.setFill(Color.GREEN);
                     gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
                 } else {
-                    if(showVisited && visitedCells[i][j]) {
+                    if (showVisitedBox.isSelected() && visitedCells[i][j]) {
                         gc.setFill(Color.ALICEBLUE);
                         gc.fillRect(currentX, currentY, rectWidth - 1, rectHeight - 1);
                     } else {
@@ -271,10 +283,10 @@ public class Controller {
     public void openConfiguration() {
         stopTimer();
         gameOfLife = new GameOfLife(FileOperator.openFile(stage));
-        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+        drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
     }
 
-    public void setStage(final Stage stage) {
+    void setStage(final Stage stage) {
         this.stage = stage;
     }
 
@@ -286,17 +298,26 @@ public class Controller {
     public void loadFileOnDragDropped(DragEvent dragEvent) {
         System.out.println("dragEvent");
         Dragboard dragboard = dragEvent.getDragboard();
-        if(dragboard.hasFiles() ) {
+        if (dragboard.hasFiles()) {
             List<File> files = dragboard.getFiles();
-            if(files.size()>1 || !files.get(0).getName().endsWith(".csv")) {
+            if (files.size() > 1 || !files.get(0).getName().endsWith(".csv")) {
                 return;
             }
             String filePath = files.get(0).getAbsolutePath();
             boolean[][] configuration = FileOperator.openFileFromPath(filePath);
             gameOfLife = new GameOfLife(configuration);
-            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(),gameOfLife.getVisitedCells(),true);
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         }
 
+    }
+
+    /**
+     * Redraws the game without calculating a new generation
+     */
+    public void redraw() {
+        if(gameOfLife != null) {
+            drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+        }
     }
 
 

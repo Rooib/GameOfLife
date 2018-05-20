@@ -2,7 +2,6 @@ package Game;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,8 +53,8 @@ public class GameOfLife {
      */
     public GameOfLife(final boolean[][] gameConfiguration) {
         this.gameField = gameConfiguration;
-        this.referenceField = gameConfiguration;
-        this.visitedCells = gameConfiguration;
+        this.referenceField = getCopy(gameConfiguration);
+        this.visitedCells = getCopy(gameConfiguration);
         this.oldConfigurations = new ArrayList<>();
         this.oldVisitedCells = new ArrayList<>();
     }
@@ -107,12 +106,10 @@ public class GameOfLife {
                     if (neigbhourCount < 2 || neigbhourCount > 3) {
                         this.markCellAsDead(x, y);
                     }
-                }
-                else {
-                    if (neigbhourCount == 3 ) {
+                } else {
+                    if (neigbhourCount == 3) {
                         this.markCellAsAlive(x, y);
-                        this.visitedCells[y][x] = true;
-                        //TODO villeicht hier auch die markCell Methode generalisiern
+                        this.markCellAsVisited(x,y);
                     }
                 }
             }
@@ -172,29 +169,11 @@ public class GameOfLife {
         if (n < 1) {
             throw new IllegalArgumentException("You must at least calculate one next generation!");
         }
-        if (!isDone()) {
-            for (int i = 0; i < n; i++) {
-                calculateNextGeneration(display);
-            }
+        for (int i = 0; i < n; i++) {
+            calculateNextGeneration(display);
         }
-    }
 
-    /**
-     * Tells if there are no more further generations to calculate
-     *
-     * @return - true if the game is over, else false
-     */
-    private boolean isDone() {
-        boolean[][] oldConfig = getCurrentConfiguration();
-        calculateNextGeneration(false);
-        if (Arrays.equals(oldConfig, gameField)) {
-            return true;
-        } else {
-            this.gameField = oldConfig;
-            return false;
-        }
     }
-
 
     /**
      * Returns the current configuration of the Game
@@ -269,5 +248,13 @@ public class GameOfLife {
 
     public boolean[][] getVisitedCells() {
         return visitedCells;
+    }
+
+    public void markCellAsVisited(final int x, final int y) {
+        visitedCells[y][x] = true;
+    }
+
+    public void markCellAsNotVisited(final int x, final int y) {
+        visitedCells[y][x] = false;
     }
 }

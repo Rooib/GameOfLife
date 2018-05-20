@@ -10,29 +10,31 @@ import javafx.scene.control.Alert;
  */
 class PopUpInfo {
 
-    private final static String TITLE_TEXT  = "Diese Eingabe stimmt so nicht!";
+
 
     /**
      * Creates a information pop up dialog with the given message
      *
      * @param message - shown as content by this dialog
+     * @param title   - title to be set for the window
      */
-    static void createInformationPopup(final String message) {
-        createGeneralPoput(Alert.AlertType.INFORMATION,message);
+    static void createInformationPopup(final String message, final String title) {
+        createGeneralPopup(Alert.AlertType.INFORMATION, message, title);
     }
 
     /**
      * Creates a warning pop up dialog with the given message
      *
      * @param message - shown as content by this dialog
+     * @param title   - title to be set for the window
      */
-    static void createWarningPopup(final String message) {
-        createGeneralPoput(Alert.AlertType.WARNING,message);
+    static void createWarningPopup(final String message, final String title) {
+        createGeneralPopup(Alert.AlertType.WARNING, message, title);
     }
 
-    private static void createGeneralPoput(Alert.AlertType alertType,final String message) {
+    private static void createGeneralPopup(final Alert.AlertType alertType, final String message, final String title) {
         Alert alert = new Alert(alertType);
-        alert.setTitle(TITLE_TEXT);
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

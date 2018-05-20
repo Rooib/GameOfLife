@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+<BorderPane fx:id="borderPane" prefHeight="643.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
@@ -86,7 +86,7 @@
             </HBox>
             <Line endX="169.0" startX="-100.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
-                  <Insets bottom="50.0" top="50.0" />
+                  <Insets bottom="15.0" top="15.0" />
                </VBox.margin>
             </Line>
             <Label text="Generationen/min">
@@ -106,9 +106,23 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Region HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
+            <Line endX="169.0" layoutX="111.0" layoutY="448.0" startX="-100.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </Line>
+            <CheckBox fx:id="showVisitedBox" mnemonicParsing="false" onAction="#redraw" text="Zeige besuchte Zellen">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Line endX="169.0" layoutX="111.0" layoutY="248.0" startX="-100.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </Line>
             <VBox>
                <children>
                   <Label text="Anzahl der Zellen" underline="true">
