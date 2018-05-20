@@ -107,8 +107,9 @@ public class GameOfLife {
                     if (neigbhourCount < 2 || neigbhourCount > 3) {
                         this.markCellAsDead(x, y);
                     }
-                } else {
-                    if (neigbhourCount == 3) {
+                }
+                else {
+                    if (neigbhourCount == 3 ) {
                         this.markCellAsAlive(x, y);
                         this.visitedCells[y][x] = true;
                         //TODO villeicht hier auch die markCell Methode generalisiern
@@ -138,7 +139,7 @@ public class GameOfLife {
                 if (yOff == 0 && xOff == 0) {
                     continue;
                 }
-                int newX = Math.floorMod(x - xOff, gameField.length);
+                int newX = Math.floorMod(x - xOff, gameField[0].length);
                 int newY = Math.floorMod(y - yOff, gameField.length);
                 if (referenceField[newY][newX]) {
                     neighbourCount++;
@@ -222,14 +223,11 @@ public class GameOfLife {
     /**
      * Returns the previous generation of this game and
      * also sets the current managed generation to the previous one
-     *
-     * @return - if existing, the previous generation else the current generation
      */
     private void getAndSetPreviousGeneration() {
         //TODO villeicht exception werfen, wenn die länge der history listen nicht übereinstimmen
-        if (oldConfigurations.size() == 0) {
-            return;
-        } else {
+        if (oldConfigurations.size() != 0) {
+
             // Reset visited cells to previous settings
             visitedCells = oldVisitedCells.get(oldVisitedCells.size() - 1);
             oldVisitedCells.remove(oldVisitedCells.size() - 1);
