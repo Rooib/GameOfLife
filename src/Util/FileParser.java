@@ -13,6 +13,15 @@ import java.util.List;
 public class FileParser {
 
     /**
+     * Since this is a helper class instances are not
+     * reasonable
+     */
+    private FileParser() {
+        //You shall not instantiate this class!!
+        System.exit(-1);
+    }
+
+    /**
      * Reads comma seperated file which includes the game configuration
      * i.e. dead and alive cells. Then it creates a new GameOfLive Instance
      * with the given configuration
@@ -80,6 +89,7 @@ public class FileParser {
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)) {
 
             for (boolean[] row : gameConfig) {
+                fileWriter.write('{');
                 for (int i = 0; i < row.length; i++) {
                     if (i != row.length - 1) {
                         fileWriter.write(Boolean.toString(row[i]) + ",");
@@ -87,7 +97,7 @@ public class FileParser {
                         fileWriter.write(Boolean.toString(row[i]));
                     }
                 }
-                fileWriter.write(System.lineSeparator());
+                fileWriter.write("}" +  "," + System.lineSeparator() );
             }
         }
 

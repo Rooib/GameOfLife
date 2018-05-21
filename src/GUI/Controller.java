@@ -1,16 +1,17 @@
 package GUI;
 
 import Game.GameOfLife;
+import Game.Presets.Glider;
+import Game.Presets.Oscillating;
+import Util.FileOperator;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +30,7 @@ import java.util.List;
  * that get triggered by the inputs of the GUI
  *
  * @author Jan Leuschner
- * @version 2018-05-14
+ * @version 2018-05-20
  */
 public class Controller {
 
@@ -89,7 +91,7 @@ public class Controller {
             gameOfLife = new GameOfLife(x, y);
             drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER, INPUT_INVALID_TITLE);
         }
 
     }
@@ -194,7 +196,7 @@ public class Controller {
             gameOfLife.calcNGenerations(n, false);
             drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER, INPUT_INVALID_TITLE);
         }
 
     }
@@ -211,7 +213,7 @@ public class Controller {
             gameOfLife.getNPreviousGenerations(n);
             drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
-            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER,INPUT_INVALID_TITLE);
+            PopUpInfo.createInformationPopup(INPUT_VALID_NUMBER, INPUT_INVALID_TITLE);
         }
     }
 
@@ -315,8 +317,50 @@ public class Controller {
      * Redraws the game without calculating a new generation
      */
     public void redraw() {
-        if(gameOfLife != null) {
+        if (gameOfLife != null) {
             drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+        }
+    }
+
+    /**
+     * Checks for the MenuItem clicked and loads the fitting preset
+     * Creates a new Game of Life in the process
+     * @param event - ActionEvent of the MenuItem
+     */
+    public void loadPreset(ActionEvent event) {
+        if (event.getSource() instanceof MenuItem) {
+            MenuItem menutItem = (MenuItem) event.getSource();
+            System.out.println(menutItem.getId());
+            switch (menutItem.getId()) {
+                case "blinker":
+                    gameOfLife = new GameOfLife(Oscillating.blinker);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "clock":
+                    gameOfLife = new GameOfLife(Oscillating.clock);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "pulsator1":
+                    gameOfLife = new GameOfLife(Oscillating.pulsator);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "pulsator2":
+                    gameOfLife = new GameOfLife(Oscillating.pulsatorTwo);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "lsw":
+                    gameOfLife = new GameOfLife(Glider.LWS);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "glider":
+                    gameOfLife = new GameOfLife(Glider.GLIDER);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "gliderCannon":
+                    gameOfLife = new GameOfLife(Glider.GLIDER_CANNON);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+            }
         }
     }
 

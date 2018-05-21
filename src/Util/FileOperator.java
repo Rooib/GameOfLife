@@ -1,7 +1,7 @@
-package GUI;
+package Util;
 
+import GUI.PopUpInfo;
 import Game.GameOfLife;
-import Util.FileParser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -24,7 +24,22 @@ public class FileOperator {
 
     private final static String SUCCESS = "Erfolgreich";
 
-    //TODO Strings als konstanten!
+    private final static String FAIL_TO_SAVE_FILE = "Fehler während speichern der Datei!";
+
+    private final static String FAIL_TO_LOAD_FILE = "Die Datei konnte nicht gefunden oder geladen werden!";
+
+    private final static String SAVED = "Erfolgreich gespeichert!";
+
+    private final static String INVALID_FIELD_FORMAT = "Die Datei enthält kein rechteckiges Spielfeld!";
+
+    /**
+     * Since this is a helper class instances are not
+     * reasonable
+     */
+    private FileOperator() {
+        //You shall not instantiate this class!
+        System.exit(-1);
+    }
 
     /**
      * If a current file is selected the Game will automatically
@@ -41,7 +56,7 @@ public class FileOperator {
             try {
                 FileParser.saveGameToFile(gameOfLife, currentFile);
             } catch (IOException e) {
-                PopUpInfo.createWarningPopup("Fehler während speichern der Datei!",INPUT_INVALID_TITLE);
+                PopUpInfo.createWarningPopup(FAIL_TO_SAVE_FILE,INPUT_INVALID_TITLE);
             }
 
         }
@@ -63,9 +78,9 @@ public class FileOperator {
             currentFile = file.getAbsolutePath();
             try {
                 FileParser.saveGameToFile(gameOfLife, file.getAbsolutePath());
-                PopUpInfo.createInformationPopup("Die Datei wurde gespeichert",SUCCESS);
+                PopUpInfo.createInformationPopup(SAVED,SUCCESS);
             } catch (IOException e) {
-                PopUpInfo.createWarningPopup("Fehler während speichern der Datei!",INPUT_INVALID_TITLE);
+                PopUpInfo.createWarningPopup(FAIL_TO_SAVE_FILE,INPUT_INVALID_TITLE);
             }
         }
     }
@@ -91,9 +106,9 @@ public class FileOperator {
             return configuration;
 
         } catch (IllegalStateException e) {
-            PopUpInfo.createWarningPopup("Die Datei enthält kein rechteckiges Spielfeld!",INPUT_INVALID_TITLE);
+            PopUpInfo.createWarningPopup(INVALID_FIELD_FORMAT,INPUT_INVALID_TITLE);
         } catch (IOException e) {
-            PopUpInfo.createWarningPopup("Die Datei konnte nicht gefunden oder geladen werden!",INPUT_INVALID_TITLE);
+            PopUpInfo.createWarningPopup(FAIL_TO_LOAD_FILE,INPUT_INVALID_TITLE);
         }
 
         return new boolean[0][0];
@@ -112,9 +127,9 @@ public class FileOperator {
             currentFile = filePath;
             return configuration;
         } catch (IOException e) {
-            PopUpInfo.createWarningPopup("Die Datei konnte nicht gefunden oder geladen werden!",INPUT_INVALID_TITLE);
+            PopUpInfo.createWarningPopup(FAIL_TO_LOAD_FILE,INPUT_INVALID_TITLE);
         } catch (IllegalStateException e) {
-            PopUpInfo.createWarningPopup("Die Datei enthält kein rechteckiges Spielfeld!",INPUT_INVALID_TITLE);
+            PopUpInfo.createWarningPopup(INVALID_FIELD_FORMAT,INPUT_INVALID_TITLE);
         }
         return new boolean[0][0];
     }

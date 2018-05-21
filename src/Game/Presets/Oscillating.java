@@ -16,7 +16,9 @@ public class Oscillating {
 
     public static boolean[][] blinker = {
             {false, false, false, false, false},
+            {false, false, false, false, false},
             {false, true, true, true, false},
+            {false, false, false, false, false},
             {false, false, false, false, false}
     };
 

@@ -38,7 +38,21 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Presets">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Something" />
+                        <Menu mnemonicParsing="false" text="Oszillierend">
+                           <items>
+                              <MenuItem fx:id="blinker" mnemonicParsing="false" onAction="#loadPreset" text="Blinker" />
+                              <MenuItem fx:id="clock" mnemonicParsing="false" onAction="#loadPreset" text="Uhr" />
+                              <MenuItem fx:id="pulsator1" mnemonicParsing="false" onAction="#loadPreset" text="Pulsator 1" />
+                              <MenuItem fx:id="pulsator2" mnemonicParsing="false" onAction="#loadPreset" text="Pulsator 2" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Gleiter">
+                           <items>
+                              <MenuItem fx:id="lws" mnemonicParsing="false" onAction="#loadPreset" text="Light Weight Sapceship" />
+                              <MenuItem fx:id="glider" mnemonicParsing="false" onAction="#loadPreset" text="Gleiter" />
+                              <MenuItem fx:id="gliderCannon" mnemonicParsing="false" onAction="#loadPreset" text="Gleiterkanone" />
+                           </items></Menu>
+                        <Menu mnemonicParsing="false" text="Chaos" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
