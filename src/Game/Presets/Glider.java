@@ -9,6 +9,11 @@ package Game.Presets;
  */
 public class Glider {
 
+    private Glider() {
+        //Eine Instanz lassen wir uns nicht bieten!!!
+        System.exit(-1);
+    }
+
     //Light Weight Spaceship
     public static final boolean[][] LWS = {
             {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},

@@ -52,12 +52,17 @@
                               <MenuItem fx:id="glider" mnemonicParsing="false" onAction="#loadPreset" text="Gleiter" />
                               <MenuItem fx:id="gliderCannon" mnemonicParsing="false" onAction="#loadPreset" text="Gleiterkanone" />
                            </items></Menu>
-                        <Menu mnemonicParsing="false" text="Chaos" />
+                        <Menu mnemonicParsing="false" text="Chaos">
+                           <items>
+                              <MenuItem fx:id="rPent" mnemonicParsing="false" onAction="#loadPreset" text="r-Pentomino" />
+                              <MenuItem fx:id="acorn" mnemonicParsing="false" onAction="#loadPreset" text="Acorn" />
+                              <MenuItem fx:id="random" mnemonicParsing="false" onAction="#loadPreset" text="Zufällig" />
+                           </items></Menu>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem mnemonicParsing="false" text="Über" />
                   </items>
                 </Menu>
               </menus>

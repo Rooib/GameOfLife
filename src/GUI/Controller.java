@@ -1,8 +1,10 @@
 package GUI;
 
 import Game.GameOfLife;
+import Game.Presets.Chaos;
 import Game.Presets.Glider;
 import Game.Presets.Oscillating;
+import Game.Presets.RandomGame;
 import Util.FileOperator;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -201,6 +203,10 @@ public class Controller {
 
     }
 
+    /**
+     * Sets the game of life as many generation back as there are
+     * specified by the user
+     */
     public void goNGenerationsBack() {
 
         if (gameOfLife == null) {
@@ -329,8 +335,8 @@ public class Controller {
      */
     public void loadPreset(ActionEvent event) {
         if (event.getSource() instanceof MenuItem) {
+            stopTimer();
             MenuItem menutItem = (MenuItem) event.getSource();
-            System.out.println(menutItem.getId());
             switch (menutItem.getId()) {
                 case "blinker":
                     gameOfLife = new GameOfLife(Oscillating.blinker);
@@ -358,6 +364,18 @@ public class Controller {
                     break;
                 case "gliderCannon":
                     gameOfLife = new GameOfLife(Glider.GLIDER_CANNON);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "random":
+                    gameOfLife = RandomGame.createRandomGame();
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "rPent":
+                    gameOfLife = new GameOfLife(Chaos.R_PENTOMINO);
+                    drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
+                    break;
+                case "acorn":
+                    gameOfLife = new GameOfLife(Chaos.ACORN);
                     drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
                     break;
             }
