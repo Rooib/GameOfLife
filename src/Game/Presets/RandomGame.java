@@ -27,7 +27,7 @@ public class RandomGame {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (Math.random() > percentToBeAlive) {
+                if (Math.random() < percentToBeAlive) {
                     gameOfLife.markCellAsAlive(i, j);
                     gameOfLife.markCellAsNotVisited(i, j);
                 }

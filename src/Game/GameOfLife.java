@@ -204,7 +204,7 @@ public class GameOfLife {
      * also sets the current managed generation to the previous one
      */
     private void getAndSetPreviousGeneration() {
-        //TODO villeicht exception werfen, wenn die länge der history listen nicht übereinstimmen
+
         if (oldConfigurations.size() != 0) {
 
             // Reset visited cells to previous settings

@@ -36,8 +36,6 @@ import java.util.List;
  */
 public class Controller {
 
-    @FXML
-    private BorderPane borderPane;
 
     @FXML
     private TextField widthInput;
@@ -46,16 +44,7 @@ public class Controller {
     private TextField heightInput;
 
     @FXML
-    private Button start;
-
-    @FXML
     private Canvas canvas;
-
-    @FXML
-    private Button genForward;
-
-    @FXML
-    private Button genBackward;
 
     @FXML
     private TextField nGenInput;
@@ -77,12 +66,17 @@ public class Controller {
 
     private final String INPUT_VALID_NUMBER = "Bitte eine gültige Zahl > 1 eingeben!";
 
-    private final static String INPUT_INVALID_TITLE = "Diese Eingabe stimmt so nicht!";
+    private final String INPUT_INVALID_TITLE = "Diese Eingabe stimmt so nicht!";
+
+    private final String ABOUT_INFORMATION = "Eine Implementierung von Conway's Spiel des Lebens in Java"
+            + System.lineSeparator() + "von Jan Leuschner" + System.lineSeparator() +
+            "Eine Anleitung zu den Funktionen befindet sich in der Readme.md";
 
 
     /**
      * Initialises the Canvas with the given game of life dimensions
-     * Always creates a new GameOfLife
+     * <p>
+     * Checks if the dimensions given create a suitable game of life
      */
     public void onStartClick() {
         stopTimer();
@@ -90,6 +84,11 @@ public class Controller {
         try {
             int x = Integer.parseInt(widthInput.getText());
             int y = Integer.parseInt(heightInput.getText());
+            if (x > 150 || y > 150) {
+                PopUpInfo.createInformationPopup("Ein Spielfeld dieser Größe ist leider nicht sinnvoll",
+                        INPUT_INVALID_TITLE);
+                return;
+            }
             gameOfLife = new GameOfLife(x, y);
             drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
         } catch (IllegalArgumentException e) {
@@ -331,6 +330,7 @@ public class Controller {
     /**
      * Checks for the MenuItem clicked and loads the fitting preset
      * Creates a new Game of Life in the process
+     *
      * @param event - ActionEvent of the MenuItem
      */
     public void loadPreset(ActionEvent event) {
@@ -367,7 +367,7 @@ public class Controller {
                     drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
                     break;
                 case "random":
-                    gameOfLife = RandomGame.createRandomGame();
+                    gameOfLife = RandomGame.createRandomGame(0.4);
                     drawConfigOnCanvas(gameOfLife.getCurrentConfiguration(), gameOfLife.getVisitedCells());
                     break;
                 case "rPent":
@@ -383,4 +383,10 @@ public class Controller {
     }
 
 
+    /**
+     * Shows the about box with information about the game of life
+     */
+    public void showAboutBox() {
+        PopUpInfo.createInformationPopup(ABOUT_INFORMATION, "Über");
+    }
 }
